@@ -87,5 +87,10 @@ var TableCommon;
         var widget = new TableCommon.Table(option);
         return widget;
     };
+    $.widget('nt.loadTable', $.fn.loadTable(this), {
+        yourFunction: function () {
+            console.log("aa");
+        }
+    });
 }(jQuery));
 //# sourceMappingURL=table.js.map

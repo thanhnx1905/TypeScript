@@ -71,13 +71,13 @@ module TableCommon {
             });
         }
 
-        public loadTable(option: any){
+        public loadTable(option: any) {
             let self = this;
-               if(option == 'cellUpdates'){
-                   return  self.lstRowUpdate;
-               }else{
-                   return [];
-               }
+            if (option == 'cellUpdates') {
+                return self.lstRowUpdate;
+            } else {
+                return [];
+            }
         }
     }
 
@@ -118,4 +118,11 @@ interface JQuery<TElement> {
         var widget = new TableCommon.Table(option);
         return widget;
     }
+
+    $.widget('nt.loadTable', $.fn.loadTable(this), {
+        yourFunction: function () {
+            console.log("aa");
+        }
+    });
+
 }(jQuery));
