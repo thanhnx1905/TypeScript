@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "none",
     "sourceMap": true,
+    "module": "none",
+    "moduleResolution": "node"
   }
 }
