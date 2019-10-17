@@ -15,7 +15,8 @@ var Main = /** @class */ (function () {
             header: self.lstHeader,
             dataSource: self.lstDataSource
         };
-        $("#table").loadTable(object);
+        new demo.plugin.Table($("#table")[0], object);
+        //$("#table").loadTable(object);
     };
     Main.prototype.mockData = function () {
         var self = this;

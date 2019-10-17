@@ -17,7 +17,8 @@ class Main {
       header: self.lstHeader,
       dataSource: self.lstDataSource
     }
-    $("#table").loadTable(object);
+    new demo.plugin.Table($("#table")[0], object);
+    //$("#table").loadTable(object);
   }
 
   mockData(): void {

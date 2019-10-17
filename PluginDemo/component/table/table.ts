@@ -1,4 +1,5 @@
-module TableCommon {
+module demo.plugin {
+    let _lstCellUpdate: any = [];
     export class Table {
 
         lstHeader: Array<TableHeader> = [];
@@ -6,18 +7,18 @@ module TableCommon {
         option: any;
         lstRowUpdate: Array<CellUpdate> = [];
 
-        constructor(option: TableOption) {
+        constructor(container: HTMLElement, option: TableOption) {
             let self = this;
             self.lstHeader = option.header;
             self.dataSource = option.dataSource;
-            self.option = option.option;
+            self.option = container;
             self.init();
             self.createEvent();
         }
 
         private init(): any {
             let self = this;
-            var table_body = '<table>';
+            var table_body = '<table id =' + self.option.id+ '>';
             table_body += '<tr>';
             for (var j = 0; j < self.lstHeader.length; j++) {
                 table_body += '<th class = "header"  id = ' + self.lstHeader[j].id + ' >';
@@ -36,7 +37,9 @@ module TableCommon {
                 table_body += '</tr>';
             }
             table_body += '</table>';
-            self.option.html(table_body);
+            //self.option.outerHTML = table_body;
+            $("#"+self.option.id).html(table_body);  
+            $("#"+self.option.id).loadTable();
         }
 
         private createEvent(): any {
@@ -49,7 +52,7 @@ module TableCommon {
 
             $(".row_data").focusout(function () {
                 $(this).removeClass('bg-warning').css('padding', '');
-                let row_id: any = $(this).closest("tr"),
+                let row_id: any = $(this).closest('tr').attr('row_id'),
                     row_div = $(this),
                     id: any = row_div.attr("col_name"),
                     value: any = row_div.html();
@@ -63,22 +66,25 @@ module TableCommon {
                 });
 
                 if (cell) {
-                    _.remove(self.lstRowUpdate, cell);
+                    _.remove(self.lstRowUpdate, (item) =>{
+                        return item.id == id && item.rowId == row_id;
+                    });
                 } else {
                     self.lstRowUpdate.push(new CellUpdate(row_id, id, value));
                 }
+                _lstCellUpdate = self.lstRowUpdate;
 
             });
         }
 
-        public loadTable(option: any) {
-            let self = this;
-            if (option == 'cellUpdates') {
-                return self.lstRowUpdate;
-            } else {
-                return [];
-            }
-        }
+        // public loadTable(option: any) {
+        //     let self = this;
+        //     if (option == 'cellUpdates') {
+        //         return self.lstRowUpdate;
+        //     } else {
+        //         return [];
+        //     }
+        // }
     }
 
     export interface TableOption {
@@ -107,22 +113,72 @@ module TableCommon {
             this.value = value;
         }
     }
+
+    (function ($: any) {
+        // $.fn.loadTable = function (option: TableCommon.TableOption): any {
+        //     option.option = this;
+        //     var widget = new TableCommon.Table(option);
+        //     return widget;
+        // }
+    
+        $.widget('nt.loadTable', {
+            options: {
+                value: 0
+            },
+            _create: function (data) {
+                console.log(data);
+                //this.options.value = data.value;
+            },
+            _destroy: function (data) {
+                console.log(data);
+            },
+            _setOption: function (key, value) {
+                console.log(key);
+                console.log(value);
+            },
+            _init: function(data){
+                console.log(data);
+            },
+    
+            cellUpdates: function () {
+                return _lstCellUpdate;
+             },
+        });
+
+
+    
+    }(jQuery));
+
 }
 interface JQuery<TElement> {
-    loadTable(option: TableCommon.TableOption): TableCommon.TableOption;
+    loadTable(option: demo.plugin.TableOption): demo.plugin.TableOption;
 }
 
-(function ($: any) {
-    $.fn.loadTable = function (option: TableCommon.TableOption): any {
-        option.option = this;
-        var widget = new TableCommon.Table(option);
-        return widget;
-    }
+// (function ($: any) {
+//     // $.fn.loadTable = function (option: TableCommon.TableOption): any {
+//     //     option.option = this;
+//     //     var widget = new TableCommon.Table(option);
+//     //     return widget;
+//     // }
 
-    $.widget('nt.loadTable', $.fn.loadTable(this), {
-        yourFunction: function () {
-            console.log("aa");
-        }
-    });
+//     $.widget('nt.loadTable', {
+//         options: function (data){
+//             console.log(data);
+//         },
+//         _create: function (data) {
+//            console.log(data);
+//         },
+//         _destroy: function (data) {
+//             console.log(data);
+//         },
+//         _setOption: function (key, value) {
+//             console.log(key);
+//             console.log(value);
+//         },
 
-}(jQuery));
+//         cellUpdates: function () {
+//             return demo.plugin._lstCellUpdate;
+//          },
+//     });
+
+// }(jQuery));
