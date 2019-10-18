@@ -2,7 +2,9 @@
     width: 20px;
     height: 12px;
     background-color: dodgerblue;
-    color: #fff
+    color: #fff;
+    cursor : e-resize;
+    resize: horizontal;
 }
 
 table, td, th {
